@@ -123,7 +123,7 @@ def main():
 
     print("utilizatori implicati:", ", ".join(sorted(utilizatori)))
 
-    with open("arsenal/privesc/enum.json", "w", encoding="utf-8") as f:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "enum.json"), "w", encoding="utf-8") as f:
         json.dump(raport, f, indent=2, ensure_ascii=False)
 
     print("Raport salvat in enum.json")
