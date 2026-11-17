@@ -121,3 +121,25 @@ for k in range(256):
     if citibil(clar) and b"FLAG{" in clar:
        print("Cheie:", k)
        print("Mesaj:", clar.decode())
+ 
+import hashlib
+
+with open("probe/hashuri.txt", "r") as f:
+   tinta = f.readline().strip()
+
+print("Hash tinta:", tinta)
+print("Lungime:", len(tinta))
+
+with open("probe/wordlist.txt", "r", encoding="latin1") as f:
+    for cuv in f:
+        cuv = cuv.strip()
+  
+
+        hash_calculat = hashlib.md5(
+           cuv.encode()
+        ).hexdigest()
+
+
+        if hash_calculat == tinta:
+           print("Parola gasita:", cuv)
+           break
