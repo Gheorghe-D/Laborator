@@ -8,6 +8,7 @@ print(bytes.fromhex(b.hex()))
 
 import base64
 import re
+from urllib.parse import unquote
 
 def ghici_strat(s):
     if re.search(r"%[0-9A-Fa-f]{2}", s):
@@ -23,6 +24,10 @@ def ghici_strat(s):
    
 def desfa(s):
     strat = ghici_strat(s)
+    
+    if strat == "url":
+       rezultat = unquote(s).encode()
+       return strat, rezultat
 
     if strat == "base64":
        rezultat = base64.b64decode(s)
@@ -39,3 +44,4 @@ print(ghici_strat("48656c6c6f"))
 print(ghici_strat("U2FsdXQ="))
 print(desfa("U2FsdXQ="))
 print(desfa("48656c6c6f"))
+print(desfa("Salut%20lume"))
