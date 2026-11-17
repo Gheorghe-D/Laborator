@@ -143,3 +143,41 @@ with open("probe/wordlist.txt", "r", encoding="latin1") as f:
         if hash_calculat == tinta:
            print("Parola gasita:", cuv)
            break
+import argparse
+import json
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("intrare")
+    p.add_argument("--fisier", action="store_true")
+
+    a = p.parse_args()
+
+    print("Intrare:", a.intrare)
+    print("Este fisier:", a.fisier)
+
+    if a.fisier:
+        with open(a.intrare, "r", encoding="utf-8") as f:
+            valoare = f.read().strip()
+    else:
+        valoare = a.intrare
+
+    strat, rezultat = desfa(valoare)
+
+    print("strat detectat:", strat)
+    print("rezultat decodat:", rezultat)
+
+    fisa = {
+        "strat": strat,
+        "rezultat": rezultat.decode("utf-8")
+    }
+
+    with open("arsenal/forensics/fisa.json", "w", encoding="utf-8") as f:
+        json.dump(fisa, f, indent=4, ensure_ascii=False)
+
+    print("Fisa JSON a fost salvata.")
+
+
+if __name__ == "__main__":
+    main()
+
