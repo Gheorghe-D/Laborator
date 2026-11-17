@@ -112,3 +112,12 @@ else:
 
 
 
+with open("probe/xor.bin", "rb") as f:
+    date = f.read()
+
+for k in range(256):
+    clar = bytes(v ^ k for v in date)
+
+    if citibil(clar) and b"FLAG{" in clar:
+       print("Cheie:", k)
+       print("Mesaj:", clar.decode())
