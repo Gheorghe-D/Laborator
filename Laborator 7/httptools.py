@@ -76,25 +76,65 @@ def no_session_demo(name, value):
     response  = requests.get(BASE + "/cookeies", timeout=10)
     return response.json()["cookies"]    
 
-
-print(search({"q": "python", "page": 2}))
-print(search_url({"q": "hello world & co"}))
-print(fetch_with_agent("MyBot/1.0"))
-print(default_agent())
-print(post_json({"name": "Ana", "age": 19}))
-print((post_from({"user": "ana", "city": "Balti"})))
-print(describe_status(200))
-print(describe_status(404))
-print(describe_status(503))
-print(is_ok(200))
-print(is_ok(500))
-print(count_redirects(3))
-print(final_url(3))
-print(first_hop(3))
-print(cookie_demo("theme", "dark"))
-print(no_session_demo("theme", "dark"))
+PATHS = ["/get", "/redirect/2", "/delay/1", "/status/404", "/delay/5"]
 
 
+def report(path):
+    try:
+        response = requests.get(BASE + path, timeout=3)
+
+        return {
+            "status": response.status_code,
+            "final_url": response.url,
+            "redirects": len(response.history),
+            "seconds": response.elapsed.total_seconds(),
+            "content_type": response.headers.get("Content-Type")
+        }
+
+    except requests.RequestException as error:
+        return {"status": None, "error": str(error)}
+
+
+def main():
+    results = []
+
+    for path in PATHS:
+        result = report(path)
+        result["path"] = path
+        results.append(result)
+
+    successful = [r for r in results if r["status"] == 200]
+    successful.sort(key=lambda r: r["seconds"], reverse=True)
+
+    for r in successful:
+        print(r["path"], "->", r["status"], r["seconds"], "secunde")
+
+    print("Reusite:", len(successful))
+    print("Esuate:", len(results) - len(successful))
 
 
 
+# print(search({"q": "python", "page": 2}))
+# print(search_url({"q": "hello world & co"}))
+# print(fetch_with_agent("MyBot/1.0"))
+# print(default_agent())
+# print(post_json({"name": "Ana", "age": 19}))
+# print((post_from({"user": "ana", "city": "Balti"})))
+# print(describe_status(200))
+# print(describe_status(404))
+# print(describe_status(503))
+# print(is_ok(200))
+# print(is_ok(500))
+# print(count_redirects(3))
+# print(final_url(3))
+# print(first_hop(3))
+# print(cookie_demo("theme", "dark"))
+# print(no_session_demo("theme", "dark"))
+
+
+
+
+
+if __name__ == "__main__":
+    main()
+    
