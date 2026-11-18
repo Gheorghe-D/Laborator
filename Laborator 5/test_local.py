@@ -1,9 +1,4 @@
 
-# Laborator: functii, metode si importuri pe web
-# Student: Diacencu Gheorghe
-# Grupa: SI-262
-# Anul: I
-
 import os
 import json
 import tempfile
@@ -15,7 +10,6 @@ import part4_modules as p4
 import webtools
 
 
-# Raspuns fals, folosit in locul unui raspuns de pe internet
 class FakeResponse:
 
     def __init__(self, url, html, status=200):
@@ -31,10 +25,8 @@ class FakeResponse:
         self.history = []
 
 
-# Testele pentru functiile laboratorului
 class TestLocal(unittest.TestCase):
 
-    # Testul 1 - Extragerea titlului
     def test_get_title(self):
         html = "<title> Salut </title>"
 
@@ -45,7 +37,6 @@ class TestLocal(unittest.TestCase):
             "Titlu negasit"
         )
 
-    # Testul 2 - Scorul antetelor
     def test_scoring(self):
         rezultate = {"a": True, "b": False}
 
@@ -56,7 +47,6 @@ class TestLocal(unittest.TestCase):
             "2/2"
         )
 
-    # Testul 3 - Caile din robots.txt
     def test_robots(self):
         text = "User-agent: *\nDisallow: /admin\nDisallow: /private"
 
@@ -67,7 +57,6 @@ class TestLocal(unittest.TestCase):
 
         self.assertEqual(webtools.disallowed_paths(None), [])
 
-    # Testul 4 - Linkuri interne si externe
     def test_links(self):
         html = (
             '<a href="/a"></a>'
@@ -87,7 +76,6 @@ class TestLocal(unittest.TestCase):
         self.assertEqual(len(interne), 1)
         self.assertEqual(len(externe), 1)
 
-    # Testul 5 - Extragerea imaginilor
     def test_images(self):
         html = (
             '<img src="/logo.png">'
@@ -104,7 +92,6 @@ class TestLocal(unittest.TestCase):
             ["/logo.png", "poza.jpg"]
         )
 
-    # Testul 6 - Generarea raportului JSON
     def test_report_without_internet(self):
         html = (
             '<title>Pagina test</title>'
@@ -112,7 +99,6 @@ class TestLocal(unittest.TestCase):
             '<a href="https://example.org"></a>'
         )
 
-        # Inlocuim cererile reale cu raspunsuri de test.
         def fake_fetch(url, timeout=10):
             if url.endswith("/robots.txt"):
                 return FakeResponse(
@@ -122,7 +108,6 @@ class TestLocal(unittest.TestCase):
 
             return FakeResponse("https://cybercor.org", html)
 
-        # Folosim un folder temporar pentru raport.
         initial_dir = os.getcwd()
 
         with tempfile.TemporaryDirectory() as folder:
@@ -149,7 +134,6 @@ class TestLocal(unittest.TestCase):
                 os.chdir(initial_dir)
 
 
-# Pornim testele doar cand executam acest fisier.
 if __name__ == "__main__":
     unittest.main()
 

@@ -1,9 +1,4 @@
 
-# Laborator: functii, metode si importuri pe web
-# Student: Diacencu Gheorghe
-# Grupa: SI-262
-# Anul: I
-
 import requests
 import time
 import re
@@ -18,15 +13,12 @@ BASE_URL = "https://cybercor.org"
 ECHO_URL = "https://httpbin.org"
 TIMEOUT = 10
 
-# Exercitiul 47 - Antet personalizat pentru httpbin.org
 DEFAULT_HEADERS = {"User-Agent": "WebLab-Diacencu-Gheorghe"}
 
 
-# Exercitiul 44 - Functii proprii
 def fetch(url: str, timeout=10):
     """Trimite o cerere GET si returneaza raspunsul."""
 
-    # Folosim antetul personalizat numai pe httpbin.org.
     if urlparse(url).hostname == "httpbin.org":
         headers = DEFAULT_HEADERS
     else:
@@ -193,7 +185,6 @@ def split_links(links: list, domain: str):
     return interne, externe
 
 
-# Exercitiul 50 - Raportul final al site-ului
 def site_report(url: str) -> dict:
     """Analizeaza site-ul si salveaza rezultatele in JSON."""
 
@@ -202,12 +193,10 @@ def site_report(url: str) -> dict:
     if hostname != "cybercor.org":
         raise ValueError("Este permis doar domeniul cybercor.org")
 
-    # Citim pagina principala.
     raspuns = fetch(url)
     titlu = get_title(raspuns.text)
     ip = resolve(hostname)
 
-    # Verificam redirectionarea de la HTTP la HTTPS.
     redirect = fetch("http://" + hostname)
 
     redirectionari = []
@@ -219,25 +208,20 @@ def site_report(url: str) -> dict:
         str(redirect.status_code) + " -> " + redirect.url
     )
 
-    # Calculam scorul antetelor de securitate.
     antete = security_headers(url)
     scor = score_headers(antete)
 
-    # Citim informatiile despre certificatul TLS.
     try:
         zile = cert_days_left(hostname)
     except (OSError, ssl.SSLError, KeyError, ValueError):
         zile = None
 
-    # Numarăm linkurile.
     linkuri = extract_links(raspuns.text)
     interne, externe = split_links(linkuri, hostname)
 
-    # Verificam robots.txt.
     robots = fetch_robots("https://" + hostname)
     cai = disallowed_paths(robots)
 
-    # Adunam rezultatele intr-un dictionar.
     raport = {
         "url": raspuns.url,
         "status": raspuns.status_code,
@@ -251,7 +235,6 @@ def site_report(url: str) -> dict:
         "cai_disallow": cai
     }
 
-    # Afisam rezultatele in consola.
     print("=== Raport site:", url, "===")
     print("Cod de stare:", raport["status"])
     print("URL final:", raport["url"])
@@ -266,7 +249,6 @@ def site_report(url: str) -> dict:
 
     print("Cai interzise:", raport["cai_disallow"])
 
-    # Salvam raportul in format JSON.
     with open("report.json", "w", encoding="utf-8") as fisier:
         json.dump(raport, fisier, indent=2, ensure_ascii=False)
 
@@ -275,6 +257,6 @@ def site_report(url: str) -> dict:
     return raport
 
 
-# Exercitiul 46 - Autotest
 if __name__ == "__main__":
     print("Autotest:", get_status(BASE_URL))
+
