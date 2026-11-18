@@ -117,11 +117,11 @@ def check_login(user, password):
 
 
 
-print(check_login("admin", "secret"))
-print(check_login("admin", "gresit"))
+# print(check_login("admin", "secret"))
+# print(check_login("admin", "gresit"))
 
-print(search({"q": "python", "page": 2}))
-print(search_url({"q": "hello world & co"}))
+# print(search({"q": "python", "page": 2}))
+# print(search_url({"q": "hello world & co"}))
 print(fetch_with_agent("MyBot/1.0"))
 print(default_agent())
 print(post_json({"name": "Ana", "age": 19}))
@@ -134,8 +134,8 @@ print(is_ok(500))
 print(count_redirects(3))
 print(final_url(3))
 print(first_hop(3))
-print(cookie_demo("theme", "dark"))
-print(no_session_demo("theme", "dark"))
+# print(cookie_demo("theme", "dark"))
+# print(no_session_demo("theme", "dark"))
 
 
 
