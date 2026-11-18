@@ -99,3 +99,30 @@ img.putdata(pixeli_noi)
 img.save("stego.png")
 
 print("Mesaj ascins iin stego.png")
+
+img = Image.open("stego.png").convert("RGB")
+pixeli = list(img.getdata())
+
+biti = ""
+
+for r, g, b in pixeli:
+    biti += str(r & 1)
+    biti += str(g & 1)
+    biti += str(b & 1)
+
+mesaj = "" 
+
+for i in range(0, len(biti) -7,8):
+    octet = int(biti[i:i+8], 2)
+
+
+    if octet == 0:
+        break
+
+    mesaj += chr(octet)
+
+
+print("Mesaj recuperat:", mesaj)
+
+
+
