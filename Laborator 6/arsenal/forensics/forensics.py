@@ -72,3 +72,30 @@ if pozitie != -1:
 
 else:
     print("Nu s-a gasit arhiva ZIP. ")
+
+from PIL import Image
+
+img = Image.open("probe/foto.jpg").convert("RGB")
+pixeli = list(img.getdata())
+
+mesaj = b"FLAG{ascuns_in_pixeli}\x00"
+biti = "".join(f"{octet:08b}" for octet in mesaj)
+
+canale = [canal for pixel in pixeli for canal in pixel]
+
+if len(biti) > len(canale):
+    raise ValueError("Mesajul este prea lung .")
+
+for i,bit in enumerate(biti):
+    canale[i] = (canale[i] & ~1) | int(bit)
+
+pixeli_noi = [
+    tuple(canale[i:i+3])
+    for i in range(0, len(canale), 3)
+
+]    
+
+img.putdata(pixeli_noi)
+img.save("stego.png")
+
+print("Mesaj ascins iin stego.png")
