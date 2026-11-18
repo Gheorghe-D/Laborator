@@ -65,16 +65,21 @@ def first_hop(n):
     )    
     return response.headers["Location"]
 
+
+    
+
 def cookie_demo(name, value):
     session = requests.Session()
-    session.get(BASE + "/cookies/set/", params={name: value}, timeout=10)
+    session.get(BASE + "/cookies/set", params={name: value}, timeout=10)
     response = session.get(BASE + "/cookies", timeout=10)
     return response.json()["cookies"]
 
+
 def no_session_demo(name, value):
-    requests.get(BASE + "/cookies/set/", params={name: value}, timeout=10)
-    response  = requests.get(BASE + "/cookeies", timeout=10)
-    return response.json()["cookies"]    
+    requests.get(BASE + "/cookies/set", params={name: value}, timeout=10)
+    response = requests.get(BASE + "/cookies", timeout=10)
+    return response.json()["cookies"]
+ 
 
 PATHS = ["/get", "/redirect/2", "/delay/1", "/status/404", "/delay/5"]
 
@@ -95,46 +100,43 @@ def report(path):
         return {"status": None, "error": str(error)}
 
 
-def main():
-    results = []
-
-    for path in PATHS:
-        result = report(path)
-        result["path"] = path
-        results.append(result)
-
-    successful = [r for r in results if r["status"] == 200]
-    successful.sort(key=lambda r: r["seconds"], reverse=True)
-
-    for r in successful:
-        print(r["path"], "->", r["status"], r["seconds"], "secunde")
-
-    print("Reusite:", len(successful))
-    print("Esuate:", len(results) - len(successful))
 
 
 
-# print(search({"q": "python", "page": 2}))
-# print(search_url({"q": "hello world & co"}))
-# print(fetch_with_agent("MyBot/1.0"))
-# print(default_agent())
-# print(post_json({"name": "Ana", "age": 19}))
-# print((post_from({"user": "ana", "city": "Balti"})))
-# print(describe_status(200))
-# print(describe_status(404))
-# print(describe_status(503))
-# print(is_ok(200))
-# print(is_ok(500))
-# print(count_redirects(3))
-# print(final_url(3))
-# print(first_hop(3))
-# print(cookie_demo("theme", "dark"))
-# print(no_session_demo("theme", "dark"))
+def check_login(user, password):
+    try:
+        response = requests.get(
+            BASE + "/basic-auth/admin/secret",
+            auth=(user, password),
+            timeout=10
+        )
+        return response.status_code == 200
+    except requests.RequestException:
+        return False
 
 
 
 
+print(check_login("admin", "secret"))
+print(check_login("admin", "gresit"))
 
-if __name__ == "__main__":
-    main()
-    
+print(search({"q": "python", "page": 2}))
+print(search_url({"q": "hello world & co"}))
+print(fetch_with_agent("MyBot/1.0"))
+print(default_agent())
+print(post_json({"name": "Ana", "age": 19}))
+print((post_from({"user": "ana", "city": "Balti"})))
+print(describe_status(200))
+print(describe_status(404))
+print(describe_status(503))
+print(is_ok(200))
+print(is_ok(500))
+print(count_redirects(3))
+print(final_url(3))
+print(first_hop(3))
+print(cookie_demo("theme", "dark"))
+print(no_session_demo("theme", "dark"))
+
+
+
+
