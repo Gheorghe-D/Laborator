@@ -1,0 +1,25 @@
+
+# Medii virtuale Python
+**/.venv/
+**/venv/
+
+# Fisiere temporare Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Cache pentru testare
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Fisiere temporare ale editorului
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fisiere de sistem
+.DS_Store
+Thumbs.db
