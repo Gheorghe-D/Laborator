@@ -65,6 +65,17 @@ def first_hop(n):
     )    
     return response.headers["Location"]
 
+def cookie_demo(name, value):
+    session = requests.Session()
+    session.get(BASE + "/cookies/set/", params={name: value}, timeout=10)
+    response = session.get(BASE + "/cookies", timeout=10)
+    return response.json()["cookies"]
+
+def no_session_demo(name, value):
+    requests.get(BASE + "/cookies/set/", params={name: value}, timeout=10)
+    response  = requests.get(BASE + "/cookeies", timeout=10)
+    return response.json()["cookies"]    
+
 
 print(search({"q": "python", "page": 2}))
 print(search_url({"q": "hello world & co"}))
@@ -80,6 +91,9 @@ print(is_ok(500))
 print(count_redirects(3))
 print(final_url(3))
 print(first_hop(3))
+print(cookie_demo("theme", "dark"))
+print(no_session_demo("theme", "dark"))
+
 
 
 
