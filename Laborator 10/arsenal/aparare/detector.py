@@ -1,5 +1,7 @@
-from collections import Counter
+import argparse
+import json
 
+from parse_auth import citeste_esecuri, pe_ip
 
 def suspecti(counts, prag=10):
     if prag < 1:
@@ -18,12 +20,43 @@ def suspecti(counts, prag=10):
     return rezultat
 
 
-c = Counter({"203.0.113.9": 13, "198.51.100.7": 2})
+def main():
+    p = argparse.ArgumentParser(
+        description="Detector de atacuri brute force SSH"
 
-print(suspecti(c))
-print(suspecti(c, prag=2))
+    )
 
-try:
-    suspecti({}, 0)
-except ValueError as eroare:
-    print("Test B2 reusit:", eroare)    
+    p.add_argument("log")
+    p.add_argument("--prag",type=int, default=10)
+    p.add_argument("--json",action="store_true")
+
+    a = p.parse_args()
+
+    esecuri = citeste_esecuri(a.log)
+    counts = pe_ip(esecuri)
+    sus = suspecti(counts, a.prag)
+
+    if a.json:
+        raport = {
+            "esecuri": len(esecuri),
+            "pe_ip": dict(counts),
+            "suspecti": [
+                {"ip": ip, "incercari": n}
+                for ip, n in sus
+            ]
+        }
+
+        print(json.dumps(raport, indent=2))
+    else:
+        print(f"Esecuri de autentificare: {len(esecuri)}")
+
+        for ip, n in counts.most_common():
+            print(f" {ip}: {n}")
+
+        print(f"Suspecti (prag {a.prag}):")
+
+        for ip, n in sus:
+            print(f" {ip} ({n} incercari) BRUTE FORCE")
+
+if __name__ == "__main__":
+    main()         
