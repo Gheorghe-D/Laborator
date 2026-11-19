@@ -1,4 +1,6 @@
 import re
+from collections import Counter
+
 
 TIPAR = re.compile(
     r"Failed password for (?:invalid user )?(\S+) from (\S+) port"
@@ -40,7 +42,21 @@ esecuri = citeste_esecuri(
 
 print("esecuri:", len(esecuri))
 
+def pe_ip(esecuri):
+    return Counter(e["ip"] for e in esecuri)
+
+
+
 print(esec("Failed password for root from 203.0.113.9 port  51230 ssh2"))
 print(esec("linie stricata fara structura"))
+esecuri = citeste_esecuri(
+    "Laborator 10/arsenal/aparare/start/auth.log"
+)
+
+print("esecuri:", len(esecuri))
+counts = pe_ip(esecuri)
+
+for ip, n in counts.most_common():
+    print(f"{ip}:{n}")
 
    
