@@ -1,5 +1,6 @@
 import re
 from collections import Counter
+import sys
 
 
 TIPAR = re.compile(
@@ -36,27 +37,32 @@ def citeste_esecuri(cale):
                 })
     return esecuri                 
 
-esecuri = citeste_esecuri(
-    "Laborator 10/arsenal/aparare/start/auth.log"
-)
 
-print("esecuri:", len(esecuri))
 
 def pe_ip(esecuri):
     return Counter(e["ip"] for e in esecuri)
 
+def main():
+    if len(sys.argv) < 2:
+        print("Utilizarea: python parse_auth.py <cale_jurnal>")
+        return
+
+    cale = sys.argv[1]
+    esecuri = citeste_esecuri(cale)
+    counts = pe_ip(esecuri)
+
+    print(f"Esecuri de autentificare: {len(esecuri)}")
+
+    for ip, n in counts.most_common():
+        print(f" {ip}: {n}")
+
+if __name__ == "__main__":
+    main()
 
 
-print(esec("Failed password for root from 203.0.113.9 port  51230 ssh2"))
-print(esec("linie stricata fara structura"))
-esecuri = citeste_esecuri(
-    "Laborator 10/arsenal/aparare/start/auth.log"
-)
 
-print("esecuri:", len(esecuri))
-counts = pe_ip(esecuri)
 
-for ip, n in counts.most_common():
-    print(f"{ip}:{n}")
+
+
 
    
