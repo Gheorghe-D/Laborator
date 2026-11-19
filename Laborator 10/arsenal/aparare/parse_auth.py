@@ -35,10 +35,11 @@ def citeste_esecuri(cale):
     return esecuri                 
 
 esecuri = citeste_esecuri(
-    "Laborator/Laborator 10/arsenal/aparare/auth.log"
-    )
+    "Laborator 10/arsenal/aparare/start/auth.log"
+)
 
-print("esecuri", len(esecuri))
+print("esecuri:", len(esecuri))
+
 print(esec("Failed password for root from 203.0.113.9 port  51230 ssh2"))
 print(esec("linie stricata fara structura"))
 
