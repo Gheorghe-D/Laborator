@@ -23,3 +23,7 @@ c = Counter({"203.0.113.9": 13, "198.51.100.7": 2})
 print(suspecti(c))
 print(suspecti(c, prag=2))
 
+try:
+    suspecti({}, 0)
+except ValueError as eroare:
+    print("Test B2 reusit:", eroare)    
