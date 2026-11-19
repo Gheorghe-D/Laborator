@@ -1,0 +1,20 @@
+from  pathlib import Path
+from enum_privesc import citeste_linii
+
+START = Path(__file__).parent / "start"
+
+def cai(fisier):
+    return set(citeste_linii(START / fisier))
+
+baza = cai("baza_suid.txt")
+acum = cai("suid.txt")
+
+print("baza:", len(baza), "acum:", len(acum))
+
+noi = acum - baza
+
+print (len(noi), "SUID noi fata de sistemul curat")
+
+for c in sorted(noi):
+    print(" ", c)
+    
