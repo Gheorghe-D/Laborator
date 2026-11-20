@@ -1,4 +1,4 @@
-import json
+import argparse
 from dataclasses import dataclass, asdict
 import json
 
@@ -60,80 +60,48 @@ class Inventar:
 
 
 
-if __name__ == "__main__":
-    p1 = Proces(
-        3120,
-        "update.exe",
-        "ana",
-        r"C:\Users\ana\AppData\Local\Temp\update.exe"
 
-    )
-    p2 = Proces(
-        612,
-        "svchost.exe",
-        "SYSTEM",
-        r"C:\Windows\System32\svchost.exe"
-    )
-    e1 = Eveniment(
-        4625,
-
-        "warning",
-        "Security",
-        "administrator",
-        "An account failed to log on." 
-
+def main():
+    parser = argparse.ArgumentParser(
+        description="Inventar procese Windows si evenimente de securitate"
     )
 
-    e2 = Eveniment(
-        4624,
-        "info",
-        "Security",
-        "ana",
-        "An account was successfully logged on."
-    )
+    parser.add_argument("capturi", help="Folderul cu fisierele JSON")
+    parser.add_argument("--json", action="store_true")
 
- 
-    from pathlib import Path
-
-    folder_start = Path(__file__).resolve().parent / "start"
-
-    procese = procese_din_json(folder_start / "procese.json")
-    evenimente = evenimente_din_json(folder_start / "evenimente.json")
-
-
-    print("Procese:", len(procese))
-    print("suspecte:" ,sum(1 for p in procese if p.e_suspect()))
-
-    print("Evenimente:", len(evenimente))
-    print("suspecte:", sum(1 for e in evenimente if e.e_suspect()))
-
-
-    print("Eveniment:", e1.id)
-    print("Suspect:", e1.e_suspect())
-
-    print("Eveniment:", e2.id)
-    print("Suspect:", e2.e_suspect())
-
-
-    print("Proces:" , p1.nume)
-    print("Suspect:", p1.e_suspect())
-
-    print("Proces:", p2.nume)
-    print("Suspect:", p2.e_suspect())
-
-
+    args = parser.parse_args()
 
     
-    inv = Inventar.din_json(folder_start / "procese.json")
+    inv = Inventar.din_json(args.capturi + "/procese.json")
+    evenimente = evenimente_din_json(
+        args.capturi + "/evenimente.json"
+    )
 
-    print("B1 - Inventar")
-    print("procese:", len(inv))
+    
+    procese_suspecte = inv.suspecte()
+    alarma = [e for e in evenimente if e.e_suspect()]
 
-    print("B2 - Procese suspecte")
+    if args.json:
+        raport = {
+            "procese_suspecte": [asdict(p) for p in procese_suspecte],
+            "evenimente_alarma": [asdict(e) for e in alarma]
+        }
 
-    for p in inv.suspecte():
-        print(f"[{p.pid}] {p.nume} {p.cale}")
+        print(json.dumps(raport, indent=2, ensure_ascii=False))
 
-    print("B2 - Procese pe utilizatori")
-    print(inv.pe_user())
+    else:
+        print(f"Procese: {len(inv)} | suspecte: {len(procese_suspecte)}")
 
+        for p in procese_suspecte:
+            print(f" [{p.pid}] {p.nume} ({p.user}) {p.cale}")
+
+        print(f"Evenimente: {len(evenimente)} | alarma: {len(alarma)}")
+
+        for e in alarma:
+            print(f" {e.id} [{e.nivel}] {e.cont}: {e.mesaj}")
+    
+
+
+
+if __name__ == "__main__":
+    main()
