@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass, asdict
 import json
 
@@ -24,7 +25,14 @@ class Eveniment:
 
     def e_suspect(self):
         return self.id in SUSPECTE_ID or self.nivel == "critical"
-    
+
+def procese_din_json(cale):
+    with open(cale, encoding="utf-8") as f:
+        return [Proces(**d) for d in json.load(f)]
+
+def evenimente_din_json(cale):
+    with open(cale, encoding="utf-8") as f:
+        return [Eveniment(**d) for d in json.load(f)]        
 
 
 if __name__ == "__main__":
@@ -58,6 +66,20 @@ if __name__ == "__main__":
         "ana",
         "An account was successfully logged on."
     )
+
+    from pathlib import Path
+
+    folder_star = Path(__file__).resolve().parent / "start"
+
+    procese = procese_din_json(folder_star / "procese.json")
+    evenimente = evenimente_din_json(folder_star / "evenimente.json")
+
+    print("Procese:", len(procese))
+    print("suspecte:" ,sum(1 for p in procese if p.e_suspect()))
+
+    print("Evenimente:", len(evenimente))
+    print("suspecte:", sum(1 for e in evenimente if e.e_suspect()))
+
 
     print("Eveniment:", e1.id)
     print("Suspect:", e1.e_suspect())
