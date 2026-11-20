@@ -32,7 +32,32 @@ def procese_din_json(cale):
 
 def evenimente_din_json(cale):
     with open(cale, encoding="utf-8") as f:
-        return [Eveniment(**d) for d in json.load(f)]        
+        return [Eveniment(**d) for d in json.load(f)]   
+
+
+@dataclass
+class Inventar:
+    procese: list
+
+    @classmethod
+    def din_json(cls, cale):
+        with open(cale, encoding="utf-8") as f:
+            return cls([Proces(**d) for d in json.load(f)])
+
+    def __len__(self):
+        return len(self.procese)
+
+    def suspecte(self):
+        return [p for p in self.procese if p.e_suspect()]
+
+    def pe_user(self):
+        rezultat = {}
+
+        for p in self.procese:
+            rezultat.setdefault(p.user, []).append(p.nume)
+
+        return rezultat
+
 
 
 if __name__ == "__main__":
@@ -67,12 +92,14 @@ if __name__ == "__main__":
         "An account was successfully logged on."
     )
 
+ 
     from pathlib import Path
 
-    folder_star = Path(__file__).resolve().parent / "start"
+    folder_start = Path(__file__).resolve().parent / "start"
 
-    procese = procese_din_json(folder_star / "procese.json")
-    evenimente = evenimente_din_json(folder_star / "evenimente.json")
+    procese = procese_din_json(folder_start / "procese.json")
+    evenimente = evenimente_din_json(folder_start / "evenimente.json")
+
 
     print("Procese:", len(procese))
     print("suspecte:" ,sum(1 for p in procese if p.e_suspect()))
@@ -94,4 +121,19 @@ if __name__ == "__main__":
     print("Proces:", p2.nume)
     print("Suspect:", p2.e_suspect())
 
+
+
     
+    inv = Inventar.din_json(folder_start / "procese.json")
+
+    print("B1 - Inventar")
+    print("procese:", len(inv))
+
+    print("B2 - Procese suspecte")
+
+    for p in inv.suspecte():
+        print(f"[{p.pid}] {p.nume} {p.cale}")
+
+    print("B2 - Procese pe utilizatori")
+    print(inv.pe_user())
+
