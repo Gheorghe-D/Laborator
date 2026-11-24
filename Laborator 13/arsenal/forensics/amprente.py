@@ -1,5 +1,6 @@
 import os
 import hashlib
+import argparse
 
 MAGIC = {
     b"\x89PNG": "PNG",
@@ -23,4 +24,26 @@ def amprenta_fisier(cale):
         "sha256": hashlib.sha256(date).hexdigest()[:16]
     }    
 
-print(amprenta_fisier("arsenal/forensics/probe/imagine.png")) 
+def scaneaza(folder):
+    rez = []
+
+    for nume in sorted(os.listdir(folder)):
+        cale = os.path.join(folder, nume)
+
+        if os.path.isfile(cale):
+            rez.append(amprenta_fisier(cale))
+
+    return rez
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("folder")
+    args = parser.parse_args()
+
+    for fisa in scaneaza(args.folder):
+        print(f"{fisa['nume']:14} {fisa['tip']:11} {fisa['sha256']}")
+
+        
+
+if __name__ == "__main__":
+    main()
