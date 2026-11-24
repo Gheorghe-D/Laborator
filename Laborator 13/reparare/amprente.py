@@ -18,7 +18,7 @@ def amprenta_fisier(cale):
         date = f.read()
     return {"nume": os.path.basename(cale),
             "tip": tip(date[:8]),
-            "sha256": hashlib.sha256(date).hexdigest()[:8]}   # greseala 3
+            "sha256": hashlib.sha256(date).hexdigest()[:16]}   # greseala 3
 
 
 def scaneaza(folder):
