@@ -14,7 +14,7 @@ def tip(head):
 
 
 def amprenta_fisier(cale):
-    with open(cale) as f:             # greseala 2
+    with open(cale, "rb") as f:             # greseala 2
         date = f.read()
     return {"nume": os.path.basename(cale),
             "tip": tip(date[:8]),
