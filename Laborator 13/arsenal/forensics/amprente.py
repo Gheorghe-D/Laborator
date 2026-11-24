@@ -43,6 +43,13 @@ def main():
     for fisa in scaneaza(args.folder):
         print(f"{fisa['nume']:14} {fisa['tip']:11} {fisa['sha256']}")
 
+def amprente_lenes(folder):
+    for nume in sorted(os.listdir(folder)):
+        cale = os.path.join(folder, nume)
+
+        if os.path.isfile(cale):
+            yield amprenta_fisier(cale)     
+
         
 
 if __name__ == "__main__":
