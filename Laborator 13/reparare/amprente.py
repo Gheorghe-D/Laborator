@@ -10,7 +10,7 @@ def tip(head):
     for semnatura, nume in MAGIC.items():
         if head.startswith(semnatura):
             return nume
-        return "necunoscut"          # greseala 1
+    return "necunoscut"       # greseala 1
 
 
 def amprenta_fisier(cale):
